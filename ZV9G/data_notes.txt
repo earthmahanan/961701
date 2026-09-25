@@ -1,0 +1,37 @@
+BAAN KAFE - DATA NOTES FOR DATASET V01
+(Provided by the IT and Operations teams together with the extract.)
+
+Files
+  transactions.csv  - one row per POS transaction line, all 8 branches
+  members.csv       - current snapshot of the loyalty member table
+
+Extraction date: 16 September 2026
+Period covered in transactions.csv: 1 October 2025 - 15 September 2026
+
+Branches (all open daily 07:00-20:00)
+  B01  Siam (Bangkok)
+  B02  Ari (Bangkok)
+  B03  Thonglor (Bangkok)
+  B04  Silom (Bangkok)
+  B05  Bang Na (Bangkok)
+  B06  Ladprao (Bangkok)
+  B07  Nimman (Chiang Mai)
+  B08  Old City (Chiang Mai)
+
+Notes from Operations
+  - Branch B07 switched to a new POS system on 22 April 2026.
+  - Refunds are recorded as a NEW row with the SAME transaction_id and
+    negative quantity / discount / total.
+  - Discount policy: a discount can never be larger than the price of the
+    items it applies to.
+  - Anything else: ask the stakeholders (see the exam rules for how to ask).
+    Your access code (use it with any of them): ZV9G
+
+Notes from IT
+  - total_amount = quantity x unit_price - discount_amount
+  - Walk-in (non-member) customers have an empty member_id and member_tier.
+  - member_tier in transactions.csv is the tier recorded at the time of the
+    transaction; tier in members.csv is the member's CURRENT tier.
+  - Age is optional at sign-up. If a member skips it, the app stores 0.
+  - The satisfaction survey on the receipt is optional:
+    1 = very unsatisfied ... 5 = very satisfied.
