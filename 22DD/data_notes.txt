@@ -25,7 +25,7 @@ Notes from Operations
   - Discount policy: a discount can never be larger than the price of the
     items it applies to.
   - Anything else: ask the stakeholders (see the exam rules for how to ask).
-    Your access code (use it with any of them): 22DD
+    Your access code is in the exam sheet
 
 Notes from IT
   - total_amount = quantity x unit_price - discount_amount
