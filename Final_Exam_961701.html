@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Final Exam – Everything Start with Data</title>
+<style>
+:root{
+  --bg:#f4f2ee; --paper:#ffffff; --ink:#1d1f23; --muted:#5d6470; --line:#dcd8d0;
+  --accent:#1f5c8a; --accent-soft:#e7f0f7; --warn:#a4372b; --warn-soft:#fbeae7; --ok:#2f7a4a;
+  --field:#fbfaf7;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans Thai",sans-serif}
+.wrap{max-width:900px;margin:0 auto;padding:0 16px 120px}
+header.top{position:sticky;top:0;z-index:20;background:rgba(244,242,238,.95);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+.bar{max-width:900px;margin:0 auto;padding:10px 16px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.bar .title{font-weight:600;flex:1;min-width:180px;font-size:15px}
+.status{font-size:13px;color:var(--muted)}
+.status.saved{color:var(--ok)}
+button{font:inherit;font-size:14px;border:1px solid var(--line);background:var(--paper);color:var(--ink);padding:7px 12px;border-radius:8px;cursor:pointer}
+button:hover{border-color:var(--accent);color:var(--accent)}
+button.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+button.primary:hover{background:#174a70;color:#fff}
+button.danger:hover{border-color:var(--warn);color:var(--warn)}
+.paper{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:28px 32px;margin-top:20px}
+h1{font-size:28px;margin:0 0 4px;letter-spacing:-.01em}
+.sub{color:var(--muted);margin:0}
+h2{font-size:22px;margin:0 0 12px;padding-bottom:8px;border-bottom:2px solid var(--ink)}
+h3{font-size:17px;margin:22px 0 8px}
+h4{font-size:15px;margin:18px 0 6px}
+.id-grid{display:grid;grid-template-columns:2fr 1fr;gap:14px;margin-top:20px}
+label.fl{display:block;font-size:13px;font-weight:600;color:var(--muted);margin-bottom:4px}
+input[type=text],textarea,select{width:100%;font:inherit;color:var(--ink);background:var(--field);border:1px solid var(--line);border-radius:8px;padding:9px 11px}
+input[type=text]:focus,textarea:focus,select:focus{outline:2px solid var(--accent);outline-offset:0;border-color:var(--accent);background:#fff}
+textarea{resize:vertical;min-height:120px;overflow:hidden}
+textarea.code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:14px;line-height:1.5;tab-size:4}
+table{width:100%;border-collapse:collapse;font-size:14px;margin:8px 0}
+th,td{border:1px solid var(--line);padding:7px 9px;vertical-align:top;text-align:left}
+th{background:#f3f1ec;font-weight:600}
+.tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table.ans td{padding:4px}
+table.ans textarea{min-height:44px;border-color:transparent;background:transparent;padding:6px}
+table.ans textarea:focus{background:#fff}
+table.ans select{background:transparent;border-color:transparent}
+blockquote{margin:10px 0;padding:10px 14px;border-left:3px solid var(--accent);background:var(--accent-soft);border-radius:0 8px 8px 0}
+blockquote p{margin:4px 0}
+.q{border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin:18px 0;background:#fff}
+.q .qh{display:flex;gap:10px;align-items:baseline;margin-bottom:6px}
+.q .qid{font-weight:700;color:var(--accent);white-space:nowrap}
+.q .pts{font-size:12px;font-weight:600;background:var(--accent-soft);color:var(--accent);padding:2px 8px;border-radius:99px;white-space:nowrap}
+.q .prompt{margin:0 0 10px}
+.meta{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:4px}
+.notice{background:var(--warn-soft);border:1px solid #efc9c2;color:var(--warn);border-radius:10px;padding:12px 16px;font-size:14px;margin-top:16px}
+.hint{font-size:13px;color:var(--muted);margin:6px 0}
+.row-btns{display:flex;gap:8px;margin-top:6px}
+.attach{margin-top:10px;border-top:1px dashed var(--line);padding-top:10px}
+.attach .imgs{display:flex;flex-direction:column;gap:12px;margin-top:8px}
+.attach figure{margin:0;border:1px solid var(--line);border-radius:8px;padding:8px;background:var(--field)}
+.attach figure img{max-width:100%;display:block;border-radius:4px}
+.attach figcaption{display:flex;gap:8px;align-items:center;margin-top:6px}
+.attach figcaption input{flex:1;padding:5px 8px;font-size:13px}
+.attach figcaption button{font-size:12px;padding:4px 8px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:var(--warn);color:#fff;padding:10px 18px;border-radius:10px;font-size:14px;opacity:0;pointer-events:none;transition:.2s;z-index:50;max-width:calc(100% - 32px);text-align:center}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.pc{display:none}
+.closing{text-align:center;font-style:italic;color:var(--muted);margin-top:26px}
+ul{padding-left:22px}
+@media (max-width:640px){
+  .paper{padding:20px 16px}
+  .id-grid{grid-template-columns:1fr}
+  h1{font-size:23px}
+}
+@media print{
+  body{background:#fff;font-size:12pt}
+  header.top,.no-print,.row-btns,.attach input[type=file],.attach figcaption button,.meta .wc-hint,.toast{display:none!important}
+  .wrap{max-width:none;padding:0}
+  .paper{border:none;padding:0;margin:0 0 12px}
+  .paper.info{display:none}
+  .q{break-inside:auto;border-color:#bbb}
+  textarea{display:none!important}
+  .pc{display:block;white-space:pre-wrap;word-wrap:break-word;border:1px solid #bbb;border-radius:4px;padding:6px 8px;min-height:2em}
+  .code + .pc{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:10pt}
+  table.ans .pc{border:none;padding:0}
+  select{appearance:none;border:none;padding:0;background:none}
+  input[type=text]{border:none;border-bottom:1px solid #999;border-radius:0;background:none}
+  .attach figure{break-inside:avoid}
+  .print-foot{display:block!important}
+  h2{break-after:avoid}
+}
+.acode-box{margin-top:16px;border:1px solid var(--line);border-radius:10px;padding:12px 16px;background:var(--field)}
+.acode-box.ok{border-color:#9cc9ab;background:#eef7f1}
+.acode-box.bad{border-color:#efc9c2;background:var(--warn-soft)}
+.acode-label{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.acode-val{font:700 26px/1.3 ui-monospace,Menlo,Consolas,monospace;letter-spacing:.08em;margin:2px 0}
+.acode-box.ok .acode-val{color:var(--ok)}
+.acode-msg{font-size:13px;color:var(--muted)}
+.acode-box.bad .acode-msg{color:var(--warn)}
+.acode-inline{font-family:ui-monospace,Menlo,Consolas,monospace}
+input[readonly]{background:#eee;color:var(--muted);cursor:not-allowed}
+.data-links{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+.dl{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border:1px solid var(--accent);border-radius:8px;background:#fff;color:var(--accent);text-decoration:none;font:600 14px ui-monospace,Menlo,Consolas,monospace}
+a.dl:hover{background:var(--accent);color:#fff}
+.dl-missing{border-color:#efc9c2;color:var(--warn);font-weight:400}
+.dl-empty{font-size:13px;color:var(--muted)}
+.print-foot{display:none;font-size:10pt;color:#555;margin-top:16px;border-top:1px solid #bbb;padding-top:6px}
+@media print{
+  .tbl-scroll{overflow:visible!important}
+  table{table-layout:fixed;width:100%!important;min-width:0!important}
+  td,th{overflow-wrap:anywhere;word-break:break-word}
+  .pc{overflow-wrap:anywhere;word-break:break-word;max-width:100%}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="bar">
+    <div class="title">Final · Everything Start with Data</div>
+    <span class="status" id="status">Not saved yet</span>
+    <button id="btnPrint" class="primary" title="Print or save as PDF for submission">Save as PDF</button>
+    <button id="btnClear" class="danger" title="Delete the draft stored in this browser">Clear draft</button>
+  </div>
+</header>
+
+<div class="wrap">
+
+<!-- ================= COVER ================= -->
+<section class="paper">
+  <h1>Final Examination</h1>
+  <p class="sub">Everything Start with Data | Master of Data Science</p>
+  <p class="sub">Case: Ping River Health Network — Predicting Serious Complications of Type 2 Diabetes</p>
+  <p class="sub">Online • Open tools (any software or AI allowed) • 3 hours • 60 points</p>
+
+  <div class="id-grid">
+    <div><label class="fl" for="f_name">Name</label><input type="text" id="f_name" data-k="name" autocomplete="off"></div>
+    <div><label class="fl" for="f_sid">Student ID</label><input type="text" id="f_sid" data-k="sid" autocomplete="off"></div>
+  </div>
+
+  <div class="notice no-print">
+    <strong>How this answer sheet works.</strong> Type your answers directly into the boxes. <strong>Pasting and drag-and-drop are disabled</strong> — every answer must be typed. Your work is saved automatically in this browser as a draft, so you can close and reopen this file on the same computer and browser. When you finish, click <strong>Save as PDF</strong>, choose "Save as PDF" as the printer, and upload the PDF as <code>StudentID_answers.pdf</code>.
+  </div>
+</section>
+
+<!-- ================= INFO ================= -->
+<section class="paper info">
+  <h2>Before you start</h2>
+  <h3>Exam rules</h3>
+  <ul>
+    <li>This is an <strong>individual</strong> exam. You may use any software, website or AI tool. You may <strong>not</strong> communicate with any other person during the exam, in any form.</li>
+    <li>Stay in the Zoom meeting with your <strong>camera on</strong> for the whole exam. Your face must be visible. Keep your microphone muted unless the instructor speaks to you.</li>
+    <li><strong>Answers must use this case and its exhibits.</strong> Where a question asks for a number, give the number and one line of working. A generic textbook answer that does not use the case earns <strong>0 points</strong> for that item.</li>
+    <li>Several questions contain a situation where the usual rule of thumb gives the wrong answer. Read each scenario and exhibit carefully.</li>
+    <li>Points reflect difficulty: harder items carry more points. Short, specific answers are best; length earns nothing extra.</li>
+    <li>Answers that are worded the same as another student’s, or that reproduce the same unusual error, are treated as collaboration. The lecturer will hold a <strong>5-minute follow-up call</strong> with a sample of students; marks for answers you cannot explain may be withdrawn.</li>
+    <li>Submit your file to the Mango Canvas Final Examination Assignment before the end time.</li>
+  </ul>
+
+  <h3>What to submit</h3>
+  <div class="tbl-scroll"><table>
+    <tr><th>#</th><th>File</th><th>Content</th></tr>
+    <tr><td>1</td><td>StudentID_answers.pdf</td><td>Written answers in this exam sheet, exported with <strong>Save as PDF</strong></td></tr>
+  </table></div>
+
+  <h3>Points</h3>
+  <div class="tbl-scroll"><table>
+    <tr><th>Part</th><th>Questions</th><th>Points</th></tr>
+
+    <tr><td>A — Business &amp; Data Understanding, Data Preparation</td><td>A1</td><td>12</td></tr>
+    <tr><td>B — Modeling</td><td>B1, B2, B3</td><td>24</td></tr>
+    <tr><td>C — Evaluation</td><td>C1</td><td>13</td></tr>
+    <tr><td>D — Deployment</td><td>D1</td><td>11</td></tr>
+    <tr><th>Total</th><th></th><th>60</th></tr>
+  </table></div>
+
+  <h2 style="margin-top:28px">The case: Ping River Health Network</h2>
+  <p>The Ping River Health Network links five community hospitals in Chiang Mai and Lamphun (<strong>H1–H5</strong>) and their sub-district health promotion hospitals. They share one registry of about 9,000 adults with <strong>type 2 diabetes</strong>. Every registered patient is invited to an <strong>annual diabetes review</strong>: weight and blood pressure, a foot examination, HbA1c, creatinine (eGFR) and urine albumin, and a medication review. Lab results come back <strong>two days</strong> after the visit.</p>
+  <p>Every year about one reviewed patient in six has a <strong>serious complication</strong> within the following 12 months: a hospital admission for hyperglycaemic crisis or severe hypoglycaemia, a diabetic foot ulcer or infection needing admission, an amputation, a fall in eGFR below 45 (CKD stage 3b or worse), or sight-threatening retinopathy. Each complication costs the network on average <strong>70,000 THB</strong> and often costs the patient their independence.</p>
+  <blockquote><p><strong>Dr. Anong (Medical Director):</strong> <em>“At every annual review I want to know which patients are heading for a complication in the next year, so we can do something about it — and I want proof that what we do actually works.”</em></p></blockquote>
+  <blockquote><p><strong>Khun Pim (NCD Nurse Manager)</strong> runs a <strong>nurse case-management programme</strong>: monthly phone follow-up, home foot care, medication adherence and a quick route to the doctor. It costs about <strong>3,000 THB per patient per year</strong>, and places are limited. In <strong>2024</strong> she ran a <strong>randomised pilot</strong> of the programme.</p></blockquote>
+  <blockquote><p><strong>Khun Wit (Network CFO)</strong> has to reserve places in the provincial hospital’s diabetic-foot surgery list a year in advance and wants the model to tell him how many.</p></blockquote>
+  <blockquote><p><strong>Khun Mai (IT Manager):</strong> a vendor model (<strong>v0</strong>) went live on 1 October 2026. It scores each patient at their annual review. The data warehouse refreshes nightly at <strong>02:00</strong>. Admissions to hospitals outside the network arrive through national insurance claims up to <strong>90 days</strong> late.</p></blockquote>
+  <blockquote><p><strong>The Data Protection Officer:</strong> health data are sensitive personal data under the PDPA. Some patients have withdrawn consent for their data to be used for analytics.</p></blockquote>
+
+  <h3>Fixed facts for the whole paper</h3>
+  <div class="tbl-scroll"><table>
+    <tr><th style="width:30%">Item</th><th>Value</th></tr>
+    <tr><td>Unit of prediction</td><td>One annual review visit (index visit)</td></tr>
+    <tr><td>Prediction time</td><td><strong>At the end of the annual review visit</strong>, before that visit’s lab results are back</td></tr>
+    <tr><td>Outcome</td><td>First serious complication within <strong>12 months</strong> after the index visit</td></tr>
+    <tr><td>Time split (by index visit date)</td><td>Train = Jan 2021 – Dec 2023; validation = Jan – Dec 2024; test = Jan – Jun 2025</td></tr>
+    <tr><td>Test set</td><td>4,800 index visits, 768 with a complication (16.0%)</td></tr>
+    <tr><td>Case-management capacity<br><span class="hint">(number of patients Khun Pim’s nurse case-management programme can take on)</span></td><td>1,320 places for the test set (264 per hospital)</td></tr>
+  </table></div>
+
+  <h3>Project definition agreed with Dr. Anong at the start of the project</h3>
+  <div class="tbl-scroll"><table>
+    <tr><th style="width:30%">CRISP-DM element</th><th>Agreed definition</th></tr>
+    <tr><td><strong>Business objective</strong></td><td>Reduce serious diabetes complications among registered patients by using the limited nurse case-management places where they do the most good.</td></tr>
+    <tr><td><strong>Business success criteria</strong></td><td>(1) Among enrolled patients, <strong>at least 15% fewer</strong> serious complications within 12 months than expected without the programme. (2) <strong>Net benefit ≥ 0 THB</strong>: complications avoided × 70,000 THB must cover 3,000 THB per enrolled patient.</td></tr>
+    <tr><td><strong>Data mining goal</strong></td><td>At the end of each annual review visit, before that visit’s lab results are back, predict the probability that the patient will have a <strong>first serious complication within 12 months</strong>, and rank patients so that the highest-risk patients fill the case-management places.</td></tr>
+    <tr><td><strong>Data mining success criteria</strong></td><td>On the time-based test set (Jan – Jun 2025): (1) <strong>recall ≥ 0.50</strong> when 1,320 patients are flagged (the case-management capacity); (2) <strong>PR-AUC ≥ 0.35</strong>.</td></tr>
+  </table></div>
+
+  <h3>Data available to the network</h3>
+  <p><code>patients.csv</code> (one row per registered patient, extracted 15 Oct 2026), <code>reviews.csv</code> (annual review visits 2020 – 2025) and <code>admissions.csv</code> (hospital admissions 2020 – Sep 2026, including claims from outside hospitals).</p>
+  <h4>reviews.csv</h4>
+  <div class="tbl-scroll"><table>
+    <tr><th style="width:36%">Column</th><th>Description</th></tr>
+    <tr><td>review_id, patient_id, hospital_id, review_date</td><td>Identifiers; H1–H5; date of the annual review</td></tr>
+    <tr><td>weight_kg, sbp, dbp, foot_risk</td><td>Measured at the visit; foot risk Low / Moderate / High from the nurse’s foot exam</td></tr>
+    <tr><td>hba1c, egfr, uacr, lab_result_date</td><td>Lab values from samples taken at this visit; date the results were reported</td></tr>
+    <tr><td>meds_at_review</td><td>Diabetes medicines listed at the visit (e.g. metformin; SU; insulin; SGLT2i; GLP-1)</td></tr>
+    <tr><td>referral_made</td><td>Referral made by the doctor at this visit (eye, foot, kidney, none)</td></tr>
+    <tr><td>pilot_arm</td><td>Case management or Usual care if in the 2024 pilot; blank otherwise</td></tr>
+    <tr><td>complication_12m (target)</td><td>Outcome label: 1 = has complication; 0 = otherwise.</td></tr>
+  </table></div>
+  <h4>patients.csv / admissions.csv</h4>
+  <div class="tbl-scroll"><table>
+    <tr><th style="width:36%">Column</th><th>Description</th></tr>
+    <tr><td>patient_id, birth_year, sex, district, insurance_type</td><td>Demographics; UC, SSO, CSMBS, Private, Self-pay</td></tr>
+    <tr><td>diagnosis_date, diabetes_type</td><td>Date of diabetes diagnosis; type (registry includes some type 1 and gestational records)</td></tr>
+    <tr><td>insulin_ever, latest_egfr, amputation_flag</td><td>As at extraction (15 Oct 2026)</td></tr>
+    <tr><td>death_date, transfer_out_date, consent_status</td><td>If applicable; consent: active / withdrawn</td></tr>
+    <tr><td>admission_id, admit_date, discharge_date, icd10_main, icd10_other, source</td><td>Admissions; ICD-10 codes; source = network or claims</td></tr>
+  </table></div>
+</section>
+
+<!-- ================= PART A ================= -->
+<section class="paper">
+  <h2>Part A — Business &amp; Data Understanding, Data Preparation (12 points)</h2>
+  <div class="q">
+    <div class="qh"><span class="qid">A1</span><span class="pts">12 points</span></div>
+    <p class="prompt"><strong>Leakage audit.</strong> Using the project definition and the data dictionary, decide for each item whether it can be used as a model input at the prediction time (end of the review visit). Answer <em>Yes</em>, <em>No</em> or <em>Only after transformation</em> with a one-line reason.</p>
+    <div class="tbl-scroll"><table class="ans">
+      <tr><th style="width:32%">Item</th><th style="width:24%">Yes / No / Transform</th><th>Reason</th></tr>
+      <tbody id="a1body"></tbody>
+    </table></div>
+  </div>
+</section>
+
+<!-- ================= PART B ================= -->
+<section class="paper">
+  <h2>Part B — Modeling (24 points)</h2>
+
+  <h4>Exhibit B1 — Gradient boosting model on the test set</h4>
+  <div class="tbl-scroll"><table>
+    <tr><td style="width:30%"><strong>Model</strong></td><td>Gradient boosting</td></tr>
+    <tr><td><strong>N</strong></td><td>4,800 index visits</td></tr>
+    <tr><td><strong>Outcome</strong></td><td>768 of those visits were followed by an actual complication within 12 months</td></tr>
+  </table></div>
+  <div class="tbl-scroll"><table>
+    <tr><th>Threshold (flag if p ≥ …)</th><th>Patients flagged by model<br><span class="hint">(predicted to have a complication within 12 months)</span></th><th>Of which had a complication (TP)</th></tr>
+    <tr><td>0.50</td><td>160</td><td>92</td></tr>
+    <tr><td>0.30</td><td>700</td><td>266</td></tr>
+    <tr><td>0.20</td><td>1,320</td><td>405</td></tr>
+    <tr><td>0.10</td><td>2,900</td><td>640</td></tr>
+  </table></div>
+
+  <div class="q">
+    <div class="qh"><span class="qid">B1</span><span class="pts">7 points</span><strong>Metrics and thresholds.</strong></div>
+    <p class="prompt">(a) Fill in the table with the value of each and how to get the answer. <span class="pts">3</span></p>
+    <div class="tbl-scroll"><table class="ans">
+      <tr><th>Threshold</th><th>Precision</th><th>Recall</th><th>False-positive rate</th><th>Accuracy</th></tr>
+      <tbody id="b1body"></tbody>
+    </table></div>
+    <label class="fl" style="margin-top:8px">How you got the values (formulas / one line of working)</label>
+    <textarea data-k="B1a_work" style="min-height:70px"></textarea>
+    <p class="prompt" style="margin-top:14px">(b) A doctor says the model at 0.50 is “barely better than assuming nobody gets a complication”. Use the table to say why accuracy misleads here. <span class="pts">1.5</span></p>
+    <textarea data-k="B1b" data-wc></textarea>
+    <p class="prompt" style="margin-top:14px">(c) Which threshold matches the case-management capacity, and why is one network-wide threshold still not the right way to fill the places? <span class="pts">2.5</span></p>
+    <textarea data-k="B1c" data-wc></textarea>
+  </div>
+
+  <div class="q">
+    <div class="qh"><span class="qid">B2</span><span class="pts">10 points</span><strong>Choosing how to split the data.</strong></div>
+    <blockquote>
+      <p><strong>Scenario.</strong> The network wants to build the complication model. The data contains <strong>18,000 annual reviews from 6,200 patients</strong> at hospitals H1–H5, with index visits from January 2021 to June 2025 (most patients have one review per year). The outcome needs 12 months of follow-up plus up to <strong>90 days</strong> for claims from outside hospitals. The model will be used from next year on <strong>all current patients</strong> at their next review, and also at a <strong>sixth hospital in Chiang Rai</strong> that joins the network in 2027.</p>
+      <p><strong>The analyst proposes:</strong> <em>“Shuffle all 18,000 reviews, run 5-fold cross-validation, try 60 hyper-parameter settings, keep the setting with the best mean ROC-AUC, and report that mean ROC-AUC (0.81) to Dr. Anong.”</em></p>
+    </blockquote>
+    <p class="prompt">(a) Do you agree with the analyst’s proposal? Answer yes or no, with one reason. <span class="pts">1</span></p>
+    <textarea data-k="B2a" data-wc style="min-height:70px"></textarea>
+    <p class="prompt" style="margin-top:14px">(b) Which way of splitting the data should be used instead? Name the method and give two reasons tied to the scenario. <span class="pts">2.5</span></p>
+    <textarea data-k="B2b" data-wc></textarea>
+    <p class="prompt" style="margin-top:14px">(c) Name <strong>two</strong> separate problems with the analyst’s plan and say in which direction each one <strong>biases</strong> the reported 0.81. <span class="pts">3.5</span></p>
+    <textarea data-k="B2c" data-wc></textarea>
+    <p class="prompt" style="margin-top:14px">(d) How would you estimate how well the model will work at the new Chiang Rai hospital? <span class="pts">2</span></p>
+    <textarea data-k="B2d" data-wc></textarea>
+    <p class="prompt" style="margin-top:14px">(e) After choosing the setting on validation, what data should the final model that goes live be trained on? <span class="pts">1</span></p>
+    <textarea data-k="B2e" data-wc style="min-height:70px"></textarea>
+  </div>
+
+  <div class="q">
+    <div class="qh"><span class="qid">B3</span><span class="pts">7 points</span><strong>Diagnosing overfitting.</strong></div>
+    <blockquote>
+      <p><strong>Scenario.</strong> H3 wants its own model to predict <strong>amputation within 12 months</strong>. The analyst has <strong>600 index visits from 480 patients</strong>, of which <strong>54 (9%)</strong> were followed by an amputation, and <strong>42 features</strong> (labs, foot exam, medicines, admissions history). She trains a small neural network for <strong>300 epochs</strong> and reports the scores from the <strong>final epoch</strong>:</p>
+      <div class="tbl-scroll"><table style="background:#fff">
+        <tr><th></th><th>F1 (amputation = positive class)</th></tr>
+        <tr><td>Training set</td><td>0.94</td></tr>
+        <tr><td>Validation, 5-fold CV (mean)</td><td>0.71</td></tr>
+        <tr><td>Validation, individual folds</td><td>0.58, 0.66, 0.72, 0.79, 0.80</td></tr>
+      </table></div>
+      <p>For quick checks earlier, the team used a single 80/20 split. Before that split, they <strong>standardised eGFR, HbA1c and weight (z-scores) using all 600 visits</strong>.</p>
+    </blockquote>
+    <p class="prompt">(a) List <strong>two concrete indicators</strong> from the scenario that support an overfitting diagnosis. <span class="pts">2</span></p>
+    <textarea data-k="B3a" data-wc></textarea>
+    <p class="prompt" style="margin-top:14px">(b) One detail in the scenario is <strong>not</strong> evidence of overfitting. Name it, explain what it does, and say in which direction it biases the earlier 80/20 result. <span class="pts">3</span></p>
+    <textarea data-k="B3b" data-wc></textarea>
+    <p class="prompt" style="margin-top:14px">(c) Give <strong>two</strong> changes to the modelling that would reduce overfitting here, each tied to a detail of this scenario. <span class="pts">2</span></p>
+    <textarea data-k="B3c" data-wc></textarea>
+  </div>
+</section>
+
+<!-- ================= PART C ================= -->
+<section class="paper">
+  <h2>Part C — Evaluation (13 points)</h2>
+  <h4>Exhibit C1 — Evaluation review meeting, 20 October 2026</h4>
+  <p>The criteria agreed with Dr. Anong at the start of the project, compared with the results:</p>
+  <div class="tbl-scroll"><table>
+    <tr><th>Criterion (set during Business Understanding)</th><th>Target</th><th>Result</th><th>Met?</th></tr>
+    <tr><td><strong>Data mining success:</strong> recall when 1,320 patients are flagged (test set)</td><td>≥ 0.50</td><td>0.527</td><td>✓</td></tr>
+    <tr><td><strong>Data mining success:</strong> PR-AUC on the test set</td><td>≥ 0.35</td><td>0.38</td><td>✓</td></tr>
+    <tr><td><strong>Business success:</strong> reduce complications among enrolled patients by ≥ 15% within 12 months</td><td>≥ 15%</td><td>about 4% expected: in the 2024 pilot the programme cut complications in the High-risk band by only 2.5 points (from 32.5%), and the 95% CI includes 0</td><td>✗</td></tr>
+    <tr><td><strong>Business success:</strong> net benefit of the programme</td><td>≥ 0 THB</td><td>about −662,000 THB if the 1,320 highest-risk patients are enrolled</td><td>✗</td></tr>
+  </table></div>
+  <p>Other points raised at the meeting:</p>
+  <ul>
+    <li><strong>Khun Pim:</strong> <em>“The model is excellent at finding the sickest patients — but those are the ones my nurses can help least.”</em></li>
+    <li><strong>Khun Wit:</strong> the 2027 budget funds only <strong>600</strong> case-management places, not 1,320.</li>
+    <li><strong>IT:</strong> the model is containerised and ready; it can go live on 1 November.</li>
+  </ul>
+
+  <div class="q">
+    <div class="qh"><span class="qid">C1</span><span class="pts">13 points</span></div>
+    <p class="prompt">In CRISP-DM, the end of the Evaluation phase means choosing the next step: <strong>(i)</strong> deploy, <strong>(ii)</strong> deploy with changes, <strong>(iii)</strong> go back for another modelling iteration, or <strong>(iv)</strong> go back to Business Understanding.</p>
+    <p class="prompt">(a) Which step do you choose? And why? <span class="pts">3</span></p>
+    <textarea data-k="C1a" data-wc></textarea>
+    <p class="prompt" style="margin-top:14px">(b) Explain why a better model (for example ROC-AUC 0.85) would <strong>not</strong> solve the problem. <span class="pts">4</span></p>
+    <textarea data-k="C1b" data-wc></textarea>
+    <p class="prompt" style="margin-top:14px">(c) If you go back to an earlier phase, state the <strong>new data mining goal</strong> and <strong>one new success criterion</strong> you would propose. <span class="pts">4</span></p>
+    <textarea data-k="C1c" data-wc></textarea>
+    <p class="prompt" style="margin-top:14px">(d) Is there anything you would deploy on 1 November anyway? Answer yes or no, with one reason. <span class="pts">2</span></p>
+    <textarea data-k="C1d" data-wc style="min-height:70px"></textarea>
+  </div>
+</section>
+
+<!-- ================= PART D ================= -->
+<section class="paper">
+  <h2>Part D — Deployment (11 points)</h2>
+  <h4>Exhibit D1 — The vendor’s proposed output</h4>
+  <p>The vendor proposes <strong>one weekly Excel file</strong>, e-mailed every Monday to all hospital directors, all case-management nurses, the doctors in the NCD clinics, Khun Wit (CFO) and the Provincial Health Office. One row per scored patient contains:</p>
+  <blockquote><p>patient name · national ID · phone · address · all ICD-10 codes · insurance type · <strong>risk score to 4 decimals (e.g. 0.2371)</strong> · the 10 largest SHAP values with feature names (e.g. egfr_prev_spline_3 = +0.041) · flag (score ≥ 0.20)</p></blockquote>
+
+  <div class="q">
+    <div class="qh"><span class="qid">D1</span><span class="pts">11 points</span><strong>Output for each audience.</strong></div>
+    <p class="prompt">For each audience, say what they should receive (content and level of detail) and the format, channel and timing.</p>
+    <div class="tbl-scroll"><table class="ans" style="min-width:600px">
+      <tr><th style="width:24%">Audience</th><th>What they receive (content and level of detail)</th><th style="width:32%">Format, channel and timing</th></tr>
+      <tbody id="d1body"></tbody>
+    </table></div>
+  </div>
+
+
+  <p class="closing">Good luck. AI can help you calculate — but only you can read the case, spot the trap, and defend your decisions.</p>
+  <div class="print-foot" id="printFoot"></div>
+</section>
+
+</div>
+
+<div class="toast" id="toast"></div>
+<script>
+(function(){
+  "use strict";
+  var STORE_KEY = "esd_final_pingriver_draft_v1";
+  var state = {};
+  var storageOK = true;
+
+  // ---------- storage ----------
+  function load(){
+    try{ var raw = localStorage.getItem(STORE_KEY); if(raw) state = JSON.parse(raw) || {}; }
+    catch(e){ storageOK = false; state = {}; }
+  }
+  var saveTimer = null;
+  function scheduleSave(){
+    setStatus("Saving…", "");
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(save, 400);
+  }
+  function save(){
+    state._savedAt = new Date().toISOString();
+    try{
+      localStorage.setItem(STORE_KEY, JSON.stringify(state));
+      setStatus("Draft saved " + new Date().toLocaleTimeString([], {hour:"2-digit",minute:"2-digit",second:"2-digit"}), "saved");
+    }catch(e){
+      storageOK = false;
+      setStatus("⚠ Could not save draft (storage full or blocked)", "");
+      toast("Draft could not be saved in this browser. Do not close this tab; save as PDF before you leave.");
+    }
+  }
+  function setStatus(t, cls){ var s = document.getElementById("status"); s.textContent = t; s.className = "status " + (cls||""); }
+
+  // ---------- toast ----------
+  var toastTimer;
+  function toast(msg){
+    var t = document.getElementById("toast"); t.textContent = msg; t.classList.add("show");
+    clearTimeout(toastTimer); toastTimer = setTimeout(function(){ t.classList.remove("show"); }, 2600);
+  }
+
+  // ---------- paste / drop blocking ----------
+  function blocked(e){
+    e.preventDefault(); e.stopPropagation();
+    state._pasteAttempts = (state._pasteAttempts || 0) + 1;
+    scheduleSave();
+    toast("Pasting is not allowed in this exam. Please type your answer.");
+  }
+  document.addEventListener("paste", blocked, true);
+  document.addEventListener("drop", blocked, true);
+  document.addEventListener("dragover", function(e){ e.preventDefault(); }, true);
+  document.addEventListener("beforeinput", function(e){
+    var t = e.inputType || "";
+    if (t === "insertFromPaste" || t === "insertFromDrop" || t === "insertFromPasteAsQuotation" || t === "insertFromYank") blocked(e);
+  }, true);
+  document.addEventListener("keydown", function(e){
+    var k = (e.key || "").toLowerCase();
+    if ((e.ctrlKey || e.metaKey) && k === "v") blocked(e);
+    if (e.shiftKey && k === "insert") blocked(e);
+  }, true);
+  document.addEventListener("contextmenu", function(e){
+    var tg = e.target.tagName;
+    if (tg === "TEXTAREA" || (tg === "INPUT" && e.target.type === "text")) { e.preventDefault(); toast("Right-click menu is disabled in answer boxes."); }
+  }, true);
+
+  // ---------- helpers for fields ----------
+  function autoGrow(ta){ ta.style.height = "auto"; ta.style.height = (ta.scrollHeight + 2) + "px"; }
+  function ensurePrintCopy(ta){
+    var n = ta.nextElementSibling;
+    if (!n || !n.classList.contains("pc")) { n = document.createElement("div"); n.className = "pc"; ta.parentNode.insertBefore(n, ta.nextSibling); }
+    n.textContent = ta.value;
+    return n;
+  }
+  function wordCount(s){ var m = s.trim().match(/\S+/g); return m ? m.length : 0; }
+  function ensureMeta(ta){
+    if (!ta.hasAttribute("data-wc")) return;
+    var n = ta.nextElementSibling; if (n && n.classList.contains("pc")) n = n.nextElementSibling;
+    if (!n || !n.classList.contains("meta")) {
+      n = document.createElement("div"); n.className = "meta no-print";
+      n.innerHTML = '<span class="wc-hint"></span><span class="wc"></span>';
+      var after = ta.nextElementSibling && ta.nextElementSibling.classList.contains("pc") ? ta.nextElementSibling : ta;
+      after.parentNode.insertBefore(n, after.nextSibling);
+    }
+    n.querySelector(".wc").textContent = wordCount(ta.value) + " words";
+  }
+  function bindField(el){
+    var k = el.getAttribute("data-k");
+    if (state[k] != null) el.value = state[k];
+    el.setAttribute("autocomplete","off");
+    if (el.tagName === "TEXTAREA"){ ensurePrintCopy(el); ensureMeta(el); requestAnimationFrame(function(){ autoGrow(el); }); }
+    var h = function(){
+      state[k] = el.value;
+      if (el.tagName === "TEXTAREA"){ autoGrow(el); ensurePrintCopy(el); ensureMeta(el); }
+      scheduleSave();
+    };
+    el.addEventListener("input", h);
+    el.addEventListener("change", h);
+  }
+
+  // ---------- A1 fixed table ----------
+  var a1items = [
+    "hba1c from the <strong>previous</strong> annual review",
+    "hba1c from <strong>this</strong> review",
+    "<code>latest_egfr</code> (patients.csv)",
+    "<code>insulin_ever</code> (patients.csv)",
+    "<code>referral_made</code> at this review",
+    "Number of admissions in the 12 months before the review",
+    "<code>amputation_flag</code> (patients.csv)",
+    "<code>death_date</code>",
+    "<code>consent_status</code>"
+  ];
+  var a1 = document.getElementById("a1body");
+  a1items.forEach(function(item, i){
+    var tr = document.createElement("tr");
+    tr.innerHTML = '<td>' + item + '</td>' +
+      '<td><select data-k="A1_' + (i+1) + '_dec"><option value="">— choose —</option><option>Yes</option><option>No</option><option>Only after transformation</option></select></td>' +
+      '<td><textarea data-k="A1_' + (i+1) + '_reason"></textarea></td>';
+    a1.appendChild(tr);
+  });
+
+  // ---------- B1 metrics table ----------
+  var b1rows = ["Predict “no complication” for all", "0.50", "0.30", "0.20", "0.10"];
+  var b1 = document.getElementById("b1body");
+  b1rows.forEach(function(r, i){
+    var tr = document.createElement("tr"), html = '<td>' + r + '</td>';
+    for (var j = 0; j < 4; j++){
+      if (i === 0 && j === 0) { html += '<td style="padding:7px 9px">—</td>'; continue; }
+      if (i === 0 && (j === 1 || j === 2)) { html += '<td style="padding:7px 9px">0</td>'; continue; }
+      html += '<td><textarea data-k="B1_r' + i + '_c' + j + '" style="min-height:38px"></textarea></td>';
+    }
+    tr.innerHTML = html; b1.appendChild(tr);
+  });
+
+  // ---------- D1 audience table ----------
+  var d1rows = ["Case-management nurse (Khun Pim’s team)", "Doctor at the annual review",
+                "Khun Wit (CFO), reservation of surgery places", "Dr. Anong / network board",
+                "Provincial Health Office", "IT / data team"];
+  var d1 = document.getElementById("d1body");
+  d1rows.forEach(function(r, i){
+    var tr = document.createElement("tr");
+    tr.innerHTML = '<td><strong>' + r + '</strong></td>' +
+      '<td><textarea data-k="D1_r' + i + '_what"></textarea></td>' +
+      '<td><textarea data-k="D1_r' + i + '_how"></textarea></td>';
+    d1.appendChild(tr);
+  });
+
+  // ---------- print ----------
+  function updateFoot(){
+    var f = document.getElementById("printFoot");
+    f.textContent = "Name: " + (state.name||"—") + "  |  Student ID: " + (state.sid||"—") +
+      "  |  Exported: " + new Date().toLocaleString() + "  |  Blocked paste attempts: " + (state._pasteAttempts||0);
+  }
+  window.addEventListener("beforeprint", function(){
+    document.querySelectorAll("textarea").forEach(ensurePrintCopy);
+    updateFoot();
+  });
+  document.getElementById("btnPrint").addEventListener("click", function(){
+    if (!(state.name||"").trim() || !(state.sid||"").trim()) { toast("Please fill in your Name and Student ID first."); document.getElementById("f_name").focus(); return; }
+    save();
+    document.title = (state.sid||"StudentID").trim() + "_answers";
+    document.querySelectorAll("textarea").forEach(ensurePrintCopy);
+    updateFoot();
+    window.print();
+  });
+  document.getElementById("btnClear").addEventListener("click", function(){
+    if (!confirm("Delete ALL your answers saved in this browser? This cannot be undone.")) return;
+    if (!confirm("Are you absolutely sure? Every answer will be erased.")) return;
+    try{ localStorage.removeItem(STORE_KEY); }catch(e){}
+    state = {}; location.reload();
+  });
+
+  window.addEventListener("beforeunload", function(e){ if (!storageOK){ e.preventDefault(); e.returnValue = ""; } });
+
+  // ---------- init ----------
+  load();
+  document.querySelectorAll("[data-k]").forEach(bindField);
+  window.addEventListener("resize", function(){ document.querySelectorAll("textarea").forEach(autoGrow); });
+  if (!storageOK) setStatus("⚠ Drafts cannot be saved in this browser", "");
+  else if (state._savedAt) setStatus("Draft restored (last saved " + new Date(state._savedAt).toLocaleString() + ")", "saved");
+})();
+</script>
+</body>
+</html>
